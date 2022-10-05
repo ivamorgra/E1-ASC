@@ -1,7 +1,9 @@
 from math import dist, sin, cos, pi
 import random
+from turtle import color
+import matplotlib.pyplot as plt
 
-def normal_distribution(ratio,n):
+def normal_distribution(ratio,pob):
     pesos =[]
     res = []
     lambda1 = 0
@@ -9,7 +11,7 @@ def normal_distribution(ratio,n):
     pesos.append(lambda1)
     pesos.append(lambda2)
     res.append(pesos)
-    for i in range(0,n-1):
+    for i in range(0,pob-1):
         p = []
         lambda1 = lambda1+ratio
         lambda2 = lambda2-ratio
@@ -72,30 +74,42 @@ def generate_population(pob, xli, xui):
 # Evaluar la población con la función zdt3 (objetivo)
 def evaluate_population(population):
     evaluated_population = []
+    f1 = []
+    f2 = []
     for individual in population:
-        evaluated_population.append(zdt3(individual))
-    return evaluated_population
+        solucion = zdt3(individual)
+        evaluated_population.append(solucion)
+        f1.append(solucion[0])
+        f2.append(solucion[1])
+    return f1,f2,evaluated_population
 
 # zdt3 function implementation
-def zdt3(x):    
+def zdt3(x):  
+
     g = 1 + 9 * sum(x[1:]) / (len(x) - 1)
     f1 = x[0]
     f2 = g * (1 - (x[0] / g) ** 0.5 - x[0] / g * sin(10 * pi * x[0]))
+
     return [f1, f2] 
 
-def find_best(fitness):
-    mejores = []
-    minimo_f1 = fitness[0][0]
-    minimo_f2 = fitness[0][1] 
+def find_best(f):
 
-    "Búsqueda de los menores valores de f1 y f2"
-    for i in range(0,len(fitness)):
-        if fitness[i][0] < minimo_f1:
-            minimo_f1 = fitness[i][0]   
-        if fitness[i][1] < minimo_f2:
-            minimo_f2 = fitness[i][1]
+    order_list = sorted(f)
+
+    return order_list[0]
     
-    mejores.append([minimo_f1,minimo_f2])
+def graph(f1,f2):
+    plt.ylim([0,7])
+    plt.scatter(f1,f2)
+    
+
+#plot pareto front
+def pareto(f):  
+    x = [i / 100 for i in range(100)]
+    y = [1 - (i / 100) ** 0.5 for i in x]
+    plt.plot(x, y, color='black')
+
+    
 
 def init(pob,xli,xui):
 
@@ -116,13 +130,21 @@ def init(pob,xli,xui):
     "Hacemos una copia de las distancias"
     distancias_aux = distancias.copy()
     t = 0.2*pob
-    selector_cercanos = t_nearest(distancias_aux,t)
+    selector_cercanos = t_nearest(distancias_aux,round(t))
     
     "4 PASO: GENERACIÓN DE LA POBLACIÓN ALEATORIA"
     poblacion = generate_population(pob,xli,xui)
 
     "5 PASO: EVALUACIÓN DE LA POBLACIÓN"
-    fitness = evaluate_population(poblacion)
+    f1,f2,fitness = evaluate_population(poblacion)
     "Seleccionamos los mejores valores objetivos fi encontrados"
-    z = find_best(fitness)   
+    f1best = find_best(f1)
+    f2best = find_best(f2)
+    z = [f1best,f2best] 
+
+    "Representación gráfica"
+    plt.scatter(f1best,f2best, color='red')
+    graph(f1,f2)
+    plt.show()
+    return poblacion,z
 
