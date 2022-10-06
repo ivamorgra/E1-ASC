@@ -109,6 +109,53 @@ def pareto(f):
     y = [1 - (i / 100) ** 0.5 for i in x]
     plt.plot(x, y, color='black')
 
+# Select random index from list
+def select_random_index(lista,poblacion,f,xui,xli):
+    ''' Como parámetro debe ser una lista de listas
+     - Parámetro f: factor de cruce
+     - xui: Parámetro que indica el límite superior del espacio de búsqueda
+     - xli: Parámetro que indica el límite inferior del espacio de búsqueda'''
+    res = []
+    for vecinos in lista:
+        vecinos_copy = vecinos.copy()
+        n = []
+        ind = []
+        for i in range(0,3):
+            index_v = random.choice(vecinos_copy)
+            n.append(index_v)
+            vecinos_copy.remove(index_v)
+        
+        "Por cada dimensión (son 30)"
+        for i in range(0,30):
+            
+            individual = poblacion[n[0]][i] + f * (poblacion[n[1]][i] - poblacion[n[2]][i])
+
+            "Antes de añadir a lista nos aseguramos de que el individuo no sobrepase los límites del espacio de búsqueda"
+            "Miramos el limite superior"
+            if individual > xui[i]:
+                individual = xui[i]
+            "Miramos el limite inferior"
+            if individual < xli[i]:
+                individual = xli[i]
+
+            ind.append(individual)
+        res.append(ind)
+    return res
+
+
+def cruce(p1,p2):
+    '''Esta función aplica el operador de cruce a dos vectores de pesos'''
+    res = []
+    for i in range(0,len(p1)):
+        res.append((p1[i]+p2[i])/2)
+    return res
+
+def operadores(poblacion,selection,prob_cruce,prob_mutacion):
+    '''Esta función aplica el operador de cruce a los individuos seleccionados'''
+    
+    
+    return res
+
     
 
 def init(pob,xli,xui):
@@ -146,5 +193,20 @@ def init(pob,xli,xui):
     plt.scatter(f1best,f2best, color='red')
     graph(f1,f2)
     plt.show()
-    return poblacion,z
+    return poblacion,z, selector_cercanos
+
+
+    def iterative(pob,xli,xui,f):
+        poblacion,z, selector_cercanos = init(pob,xli,xui)
+
+        ''' MÉTODO ITERATIVO DEL ALGORITMO BASADO EN AGREGACIÓN'''
+
+        '''PASO 1: SELECCIÓN ALEATORIA DE LOS ÍNDICES VECINOS DE CADA SUBPROBLEMA GENERAR UNA SOLUCIÓN CON OPERADORES
+        EVOLUTIVOS'''
+        selection = select_random_index(selector_cercanos,poblacion,f,xui,xli)
+        
+        
+
+        
+        pass
 
