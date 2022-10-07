@@ -193,10 +193,25 @@ def init(pob,xli,xui):
     plt.scatter(f1best,f2best, color='red')
     graph(f1,f2)
     plt.show()
-    return poblacion,z, selector_cercanos
+    return poblacion,z, selector_cercanos,z
+
+def tchebycheff(x,pesos,z):
+
+    ''' Para la actualización de los vecinos debemos tener en cuenta la formulación de Tchebycheff
+    que es la siguiente:
+    f(x) = max(wi* abs(fi(x)-zi)))
+    donde wi es el peso del subproblema i y fi(x) es la función objetivo del subproblema i
+    '''
+    i = 0
+    res = []
+    for peso in pesos:
+        value = peso* abs(zdt3(x)[i]-z[i])
+        res.append(value)
+        i = i+1
+    return max(res)
 
 
-    def iterative(pob,xli,xui,f):
+def iterative(pob,xli,xui,f,Z):
         poblacion,z, selector_cercanos = init(pob,xli,xui)
 
         ''' MÉTODO ITERATIVO DEL ALGORITMO BASADO EN AGREGACIÓN'''
@@ -205,8 +220,18 @@ def init(pob,xli,xui):
         EVOLUTIVOS'''
         selection = select_random_index(selector_cercanos,poblacion,f,xui,xli)
         
-        
+        '''PASO 2: EVALUACIÓN DE LA NUEVA POBLACIÓN'''
+        f1,f2,fitness = evaluate_population(selection)
 
+        '''PASO 3: ACTUALIZACIÓN DE Z'''
+        f1best = find_best(f1)
+        f2best = find_best(f2)
+        if f1best < z[0]:
+            z[0] = f1best
+        if f2best < z[1]:
+            z[1] = f2best
         
-        pass
+        '''PASO 4: ACTUALIZACIÓN DE LOS VECINOS'''
+        
+        return z
 
