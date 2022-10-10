@@ -1,29 +1,30 @@
 
-from alg import init,normal_distribution, distance, generate_population, evaluate_population, find_best, operator
+from alg import init,iterative
+import matplotlib.pyplot as plt
 
-'''
-l = normal_distribution(0.1,11)
-distances = distance(l)
-print("Distancias euclídeas: " )
-print(distances)
-print(len(distances))
+''' CONSTRUCCIÓN DEL ALGORITMO PRINCIPAL'''
+def main(individuos, generaciones,f):
+    "Creación del espacio de búsqueda"
+    xli = [ 0 for i in range(0,30)]
+    xui = [1 for i in range(0,30)]
 
+    "Inicialización del algoritmo"
+    poblacion, z, selector_cercanos,pesos = init(individuos,xli,xui)
 
+    "Iteración"
+    for i in range(0,generaciones):
+        
+        poblacion,z,sol1,sol2 = iterative(poblacion,xli,xui,selector_cercanos,pesos,f,z)
+    
 
+    return poblacion,z,sol1,sol2
 
-poblacion = generate_population(11, xli, xui)
+def out(individuos,generaciones,f):
+    poblacion,z,sol1,sol2 = main(individuos,generaciones,f)
+    print("Población final: ",poblacion)
 
-print("Fitness: ")
-f1,f2,evaluated_population = evaluate_population(poblacion)
-print(f1)
-minimos = find_best(f1)
-print(minimos)
-'''
-"Creación del espacio de búsqueda"
-xli = [ 0 for i in range(0,30)]
-xui = [1 for i in range(0,30)]
-poblacion, z, selector_cercanos = init(22,xli,xui)
+    plt.scatter(z[0],z[1], color='red')
+    plt.scatter(sol1,sol2)
+    plt.show()
 
-print("Nuevos índices vecinos seleccionados: ")
-res = operator(selector_cercanos,poblacion,0.5,xui,xli,0.5)
-print(res)
+out(100,100,0.5)

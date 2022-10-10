@@ -111,7 +111,7 @@ def pareto(f):
 
 
 def operator(lista,poblacion,f,xui,xli,cr):
-    
+
     ''' Como parámetro debe ser una lista de listas
      - Parámetro f: factor de cruce
      - xui: Parámetro que indica el límite superior del espacio de búsqueda
@@ -189,7 +189,7 @@ def init(pob,xli,xui):
     plt.scatter(f1best,f2best, color='red')
     graph(f1,f2)
     plt.show()
-    return poblacion,z, selector_cercanos
+    return poblacion,z, selector_cercanos,pesos
 
 def tchebycheff(x,pesos,z):
 
@@ -198,18 +198,22 @@ def tchebycheff(x,pesos,z):
     f(x) = max(wi* abs(fi(x)-zi)))
     donde wi es el peso del subproblema i y fi(x) es la función objetivo del subproblema i
     '''
-    i = 0
     res = []
-    for peso in pesos:
-        value = peso* abs(zdt3(x)[i]-z[i])
+    for i in range(0,len(pesos)):
+        functions = zdt3(x)
+        value = pesos[i]* abs(functions[i]-z[i])
         res.append(value)
-        i = i+1
     return max(res)
 
+def update_neihbours(poblacion,solucion,lista,pesos,z):
+    ''' '''
+    for i in range(0,len(lista)):
+        for vecino in lista[i]:
+            if tchebycheff(solucion[i],pesos[vecino],z) <= tchebycheff(poblacion[vecino],pesos[vecino],z):
+                poblacion[vecino] = solucion[i]
+    return poblacion
 
-def iterative(pob,xli,xui,f,Z):
-        poblacion,z, selector_cercanos = init(pob,xli,xui)
-
+def iterative(poblacion,xli,xui,selector_cercanos,pesos,f,z):
         ''' MÉTODO ITERATIVO DEL ALGORITMO BASADO EN AGREGACIÓN'''
 
         '''PASO 1: SELECCIÓN ALEATORIA DE LOS ÍNDICES VECINOS DE CADA SUBPROBLEMA GENERAR UNA SOLUCIÓN CON OPERADORES
@@ -230,6 +234,7 @@ def iterative(pob,xli,xui,f,Z):
             z[1] = f2best
         
         '''PASO 4: ACTUALIZACIÓN DE LOS VECINOS'''
-        
-        return z
+        nueva_poblacion = update_neihbours(poblacion,selection,selector_cercanos,pesos,z)
+
+        return nueva_poblacion,z,f1,f2
 
