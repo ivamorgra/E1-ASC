@@ -1,5 +1,5 @@
 
-from alg import init,normal_distribution, distance, generate_population, evaluate_population, find_best, select_random_index
+from alg import init,normal_distribution, distance, generate_population, evaluate_population, find_best, operator
 
 '''
 l = normal_distribution(0.1,11)
@@ -22,8 +22,8 @@ print(minimos)
 "Creación del espacio de búsqueda"
 xli = [ 0 for i in range(0,30)]
 xui = [1 for i in range(0,30)]
-poblacion, z, selector_cercanos = init(51,xli,xui)
+poblacion, z, selector_cercanos = init(22,xli,xui)
 
 print("Nuevos índices vecinos seleccionados: ")
-res = select_random_index(selector_cercanos,poblacion,0.5,xui,xli)
+res = operator(selector_cercanos,poblacion,0.5,xui,xli,0.5)
 print(res)
