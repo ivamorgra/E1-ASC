@@ -77,7 +77,19 @@ def generate_population(pob, xli, xui):
 
 
 # Evaluar la población con la función zdt3 (objetivo)
-def evaluate_population(individual):
+def evaluate_population(population):
+    evaluated_population = []
+    f1 = []
+    f2 = []
+    for i in range(0,len(population)):
+        solucion = zdt3(population[i])
+        evaluated_population.append(solucion)
+        f1.append(solucion[0])
+        f2.append(solucion[1])
+    return f1,f2,evaluated_population
+
+# Evaluar la población con la función zdt3 (objetivo)
+def evaluate_individual(individual):
     evaluated_population = []
     solucion = zdt3(individual)
     evaluated_population.append(solucion)
@@ -187,7 +199,7 @@ def operator(lista,poblacion,f,xui,xli,cr,z,pesos):
         ind = gaussian(ind,xli,xui)
         "Actualización de z"
         '''PASO 2: EVALUACIÓN DE LA NUEVA POBLACIÓN'''
-        f1,f2,fitness = evaluate_population(ind)
+        f1,f2,fitness = evaluate_individual(ind)
         functions_one.append(f1)
         functions_two.append(f2)
         '''PASO 3: ACTUALIZACIÓN DE Z'''
