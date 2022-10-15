@@ -5,7 +5,6 @@ from turtle import color
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-
 def normal_distribution(ratio,pob):
     pesos =[]
     res = []
@@ -74,10 +73,8 @@ def generate_population(pob, xli, xui):
         population.append(individual)
     return population
 
-
-
 # Evaluar la población con la función zdt3 (objetivo)
-def evaluate_population(individual):
+def evaluate_population2(individual):
     evaluated_population = []
     solucion = zdt3(individual)
     evaluated_population.append(solucion)
@@ -187,7 +184,7 @@ def operator(lista,poblacion,f,xui,xli,cr,z,pesos):
         ind = gaussian(ind,xli,xui)
         "Actualización de z"
         '''PASO 2: EVALUACIÓN DE LA NUEVA POBLACIÓN'''
-        f1,f2,fitness = evaluate_population(ind)
+        f1,f2,fitness = evaluate_population2(ind)
         functions_one.append(f1)
         functions_two.append(f2)
         '''PASO 3: ACTUALIZACIÓN DE Z'''
@@ -203,7 +200,7 @@ def operator(lista,poblacion,f,xui,xli,cr,z,pesos):
 
 def pareto_front():
 
-    f = open("PF.dat")
+    f = open("PFCF6.dat")
     f1 = []
     f2 = []
     for line in f:

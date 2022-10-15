@@ -1,10 +1,10 @@
 
 from cProfile import label
 from turtle import color
-from alg import init,iterative, pareto_front
+from algcf6 import init,iterative, pareto_front
 import matplotlib.pyplot as plt
 import numpy as np
-from alg import distance, normal_distribution, t_nearest, get_index
+from algcf6 import distance, normal_distribution, t_nearest, get_index
 ''' CONSTRUCCIÓN DEL ALGORITMO PRINCIPAL'''
 def main(individuos, generaciones,f):
     "Creación del espacio de búsqueda"
@@ -25,12 +25,12 @@ def main(individuos, generaciones,f):
 
 
 def out(individuos,generaciones,f):
-    poblacion,z,sol1,sol2 = main(individuos,generaciones,f)
-    print("Población final: ",poblacion)
+    #poblacion,z,sol1,sol2 = main(individuos,generaciones,f)
+    #print("Población final: ",poblacion)
     f1,f2 = pareto_front()
-    plt.scatter(z[0],z[1], color='yellow',label='Best')
-    plt.scatter(f1,f2,color='red',label='Pareto Front')
-    plt.scatter(sol1,sol2, color='green',label='Solution')
+    #plt.scatter(z[0],z[1], color='yellow',label='Best')
+    plt.scatter(f1,f2,color='black',label='Pareto Front')
+    #plt.scatter(sol1,sol2, color='green',label='Solution')
     plt.xscale('linear')
     plt.yscale('linear')
     plt.show()
