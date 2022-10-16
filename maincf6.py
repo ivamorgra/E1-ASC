@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from algcf6 import *
 
-def main_cf64d(individuos, generaciones,f):
+def main_cf64d(individuos, generaciones,f,peso):
 
     "Creación del espacio de búsqueda 4 dimensiones"
 
@@ -18,19 +18,19 @@ def main_cf64d(individuos, generaciones,f):
     xli.sort(reverse=True)
 
     "Inicialización del algoritmo"
-    poblacion, z, selector_cercanos,pesos = init4d(individuos,xli,xui)
+    poblacion, z, selector_cercanos,pesos = init4d(individuos,xli,xui,peso)
 
     "Iteración"
     
     for i in range(0,generaciones):
         
-        poblacion,z,sol1,sol2 = iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z)
+        poblacion,z,sol1,sol2 = iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
     
     
     return poblacion,z,sol1,sol2
 
-def out_cf64d(individuos,generaciones,f):
-    poblacion,z,sol1,sol2 = main_cf64d(individuos,generaciones,f)
+def out_cf64d(individuos,generaciones,f,peso):
+    poblacion,z,sol1,sol2 = main_cf64d(individuos,generaciones,f,peso)
     print("Población final: ",poblacion)
     f1,f2 = pareto_front()
     plt.scatter(z[0],z[1], color='yellow',label='Best')
@@ -43,7 +43,7 @@ def out_cf64d(individuos,generaciones,f):
 
 
 
-def main_cf616d(individuos, generaciones,f):
+def main_cf616d(individuos, generaciones,f,peso):
 
     "Creación del espacio de búsqueda 4 dimensiones"
 
@@ -54,21 +54,21 @@ def main_cf616d(individuos, generaciones,f):
     xli.append(0)
     xui.sort()
     xli.sort(reverse=True)
-    
+
     "Inicialización del algoritmo"
-    poblacion, z, selector_cercanos,pesos = init4d(individuos,xli,xui)
+    poblacion, z, selector_cercanos,pesos = init16d(individuos,xli,xui,peso)
 
     "Iteración"
     
     for i in range(0,generaciones):
         
-        poblacion,z,sol1,sol2 = iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z)
+        poblacion,z,sol1,sol2 = iterative16d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
     
     
     return poblacion,z,sol1,sol2
 
-def out_cf616d(individuos,generaciones,f):
-    poblacion,z,sol1,sol2 = main_cf64d(individuos,generaciones,f)
+def out_cf616d(individuos,generaciones,f,peso):
+    poblacion,z,sol1,sol2 = main_cf616d(individuos,generaciones,f,peso)
     print("Población final: ",poblacion)
     f1,f2 = pareto_front()
     plt.scatter(z[0],z[1], color='yellow',label='Best')
@@ -79,7 +79,8 @@ def out_cf616d(individuos,generaciones,f):
     plt.show()
 
 
-#out_cf64d(20,200,0.5)
-out_cf616d(20,200,0.5)
+out_cf64d(20,200,0.5,100)
+#out_cf616d(20,200,0.5)
+
 
 

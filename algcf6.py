@@ -74,12 +74,12 @@ def generate_population(pob, xli, xui):
     return population
 
 # Evaluar la población con la función cf6 (objetivo)
-def evaluate_population4d(population):
+def evaluate_population4d(population,peso):
     evaluated_population = []
     f1 = []
     f2 = []
     for i in range(0,len(population)):
-        solucion = cf6(population[i],4)
+        solucion = cf6(population[i],4,peso)
         evaluated_population.append(solucion)
         f1.append(solucion[0])
         f2.append(solucion[1])
@@ -87,12 +87,12 @@ def evaluate_population4d(population):
     return f1,f2,evaluated_population
 
 # Evaluar la población con la función cf6 (objetivo)
-def evaluate_population16d(population):
+def evaluate_population16d(population,peso):
     evaluated_population = []
     f1 = []
     f2 = []
     for i in range(0,len(population)):
-        solucion = cf6(population[i],16)
+        solucion = cf6(population[i],16,peso)
         evaluated_population.append(solucion)
         f1.append(solucion[0])
         f2.append(solucion[1])
@@ -100,21 +100,24 @@ def evaluate_population16d(population):
     return f1,f2,evaluated_population
 
 # Evaluar el individuo con la función cf6 (objetivo)
-def evaluate_individual4d(individual):
+def evaluate_individual4d(individual,peso):
     evaluated_population = []
-    solucion = cf6(individual,4)
+    solucion = cf6(individual,4,peso)
     evaluated_population.append(solucion)
     return solucion[0],solucion[1],evaluated_population
 
 # Evaluar el individuo con la función cf6 (objetivo)
-def evaluate_individual16d(individual):
+def evaluate_individual16d(individual,peso):
     evaluated_population = []
-    solucion = cf6(individual,16)
+    solucion = cf6(individual,16,peso)
     evaluated_population.append(solucion)
     return solucion[0],solucion[1],evaluated_population
 
 #CF6 function implementation
-def cf6(x,n):
+def cf6(x,n,peso):
+
+    pen = restrictions(x,n,peso)
+
     yj1 = 0
     for i in range(2,n,2):
         yj1 = yj1 + (x[i] - 0.8*x[0]*math.cos(6*math.pi*x[0]+i*math.pi/n))**2
@@ -126,13 +129,13 @@ def cf6(x,n):
     f1 = x[0] + yj1
     f2 = (1-x[0]**2)**2 + yj2
     
-    return [f1, f2]
+    return [f1 + pen, f2 + pen]
 
 def find_best(f):
     return min(f)
 
 
-def tchebycheff4d(x,pesos,z):
+def tchebycheff4d(x,pesos,z,peso):
 
     ''' Para la actualización de los vecinos debemos tener en cuenta la formulación de Tchebycheff
     que es la siguiente:
@@ -141,12 +144,12 @@ def tchebycheff4d(x,pesos,z):
     '''
     res = []
     for i in range(0,len(pesos)):
-        functions = cf6(x,4)
+        functions = cf6(x,4,peso)
         value = pesos[i]* abs(functions[i]-z[i])
         res.append(value)
     return max(res)
 
-def tchebycheff16d(x,pesos,z):
+def tchebycheff16d(x,pesos,z,peso):
 
     ''' Para la actualización de los vecinos debemos tener en cuenta la formulación de Tchebycheff
     que es la siguiente:
@@ -155,24 +158,24 @@ def tchebycheff16d(x,pesos,z):
     '''
     res = []
     for i in range(0,len(pesos)):
-        functions = cf6(x,16)
+        functions = cf6(x,16,peso)
         value = pesos[i]* abs(functions[i]-z[i])
         res.append(value)
     return max(res)
 
-def update_neihbours4d(index,poblacion,solucion,lista,pesos,z):
+def update_neihbours4d(index,poblacion,solucion,lista,pesos,z,peso):
     ''' '''
     
     for vecino in lista[index]:
-        if tchebycheff4d(solucion,pesos[vecino],z) <= tchebycheff4d(poblacion[vecino],pesos[vecino],z):
+        if tchebycheff4d(solucion,pesos[vecino],z,peso) <= tchebycheff4d(poblacion[vecino],pesos[vecino],z,peso):
             poblacion[vecino] = solucion
     return poblacion
 
-def update_neihbours16d(index,poblacion,solucion,lista,pesos,z):
+def update_neihbours16d(index,poblacion,solucion,lista,pesos,z,peso):
     ''' '''
     
     for vecino in lista[index]:
-        if tchebycheff16d(solucion,pesos[vecino],z) <= tchebycheff16d(poblacion[vecino],pesos[vecino],z):
+        if tchebycheff16d(solucion,pesos[vecino],z,peso) <= tchebycheff16d(poblacion[vecino],pesos[vecino],z,peso):
             poblacion[vecino] = solucion
     return poblacion
 
@@ -213,7 +216,24 @@ def gaussian16d(individual,xli,xui):
             individual[i] = aux
     return individual
 
-def operator4d(lista,poblacion,f,xui,xli,cr,z,pesos):
+def restrictions(individual,n,peso):
+    ''' Parámetros:
+    - individual: es el individuo que se va a evaluar
+    - n: es el número de dimensiones del problema
+    - peso: es el peso que se le va a asignar a la penalización'''
+    pen = 0.0
+
+    r1 = individual[1]-0.8*individual[0]*math.sin(6*math.pi*individual[0]+2*math.pi/n)+np.sign(0.5*(1-individual[0])-(1-individual[0])**2)*math.sqrt(abs(0.5*(1-individual[0])-(1-individual[0])**2))
+    r2 = individual[3]-0.8*individual[0]*math.sin(6*math.pi*individual[0]+4*math.pi/n)+np.sign(0.25*math.sqrt(1-individual[0])-0.5*(1-individual[0]))*math.sqrt(abs(0.25*math.sqrt(1-individual[0])-0.5*(1-individual[0])))
+    if r1< 0:
+        pen = pen + (r1-0)**2
+    if r2 < 0:
+        pen = pen + (r2-0)**2
+    
+    return pen*peso
+
+
+def operator4d(lista,poblacion,f,xui,xli,cr,z,pesos,peso):
 
     ''' Como parámetro debe ser una lista de listas
      - Parámetro f: factor de cruce
@@ -262,7 +282,7 @@ def operator4d(lista,poblacion,f,xui,xli,cr,z,pesos):
         ind = gaussian4d(ind,xli,xui)
         "Actualización de z"
         '''PASO 2: EVALUACIÓN DE LA NUEVA POBLACIÓN'''
-        f1,f2,fitness = evaluate_individual4d(ind)
+        f1,f2,fitness = evaluate_individual4d(ind,peso)
         functions_one.append(f1)
         functions_two.append(f2)
         '''PASO 3: ACTUALIZACIÓN DE Z'''
@@ -272,12 +292,12 @@ def operator4d(lista,poblacion,f,xui,xli,cr,z,pesos):
             z[1] = f2
         
         '''PASO 4: ACTUALIZACIÓN DE LOS VECINOS'''
-        poblacion = update_neihbours4d(j,poblacion,ind,lista,pesos,z)
+        poblacion = update_neihbours4d(j,poblacion,ind,lista,pesos,z,peso)
     
     return poblacion,z,functions_one,functions_two
 
 
-def operator16d(lista,poblacion,f,xui,xli,cr,z,pesos):
+def operator16d(lista,poblacion,f,xui,xli,cr,z,pesos,peso):
 
     ''' Como parámetro debe ser una lista de listas
      - Parámetro f: factor de cruce
@@ -326,7 +346,7 @@ def operator16d(lista,poblacion,f,xui,xli,cr,z,pesos):
         ind = gaussian16d(ind,xli,xui)
         "Actualización de z"
         '''PASO 2: EVALUACIÓN DE LA NUEVA POBLACIÓN'''
-        f1,f2,fitness = evaluate_individual16d(ind)
+        f1,f2,fitness = evaluate_individual16d(ind,peso)
         functions_one.append(f1)
         functions_two.append(f2)
         '''PASO 3: ACTUALIZACIÓN DE Z'''
@@ -336,7 +356,7 @@ def operator16d(lista,poblacion,f,xui,xli,cr,z,pesos):
             z[1] = f2
         
         '''PASO 4: ACTUALIZACIÓN DE LOS VECINOS'''
-        poblacion = update_neihbours16d(j,poblacion,ind,lista,pesos,z)
+        poblacion = update_neihbours16d(j,poblacion,ind,lista,pesos,z,peso)
     
     return poblacion,z,functions_one,functions_two
 
@@ -353,7 +373,7 @@ def pareto_front():
     
     return f1,f2
 
-def init4d(pob,xli,xui):
+def init4d(pob,xli,xui,peso):
 
     "El número de subproblemas es igual al tamaño de población"
     subproblemas = pob
@@ -378,7 +398,7 @@ def init4d(pob,xli,xui):
     poblacion = generate_population(pob,xli,xui)
 
     "5 PASO: EVALUACIÓN DE LA POBLACIÓN"
-    f1,f2,fitness = evaluate_population4d(poblacion)
+    f1,f2,fitness = evaluate_population4d(poblacion,peso)
     "Seleccionamos los mejores valores objetivos fi encontrados"
     f1best = find_best(f1)
     f2best = find_best(f2)
@@ -392,7 +412,7 @@ def init4d(pob,xli,xui):
     plt.show()
     return poblacion,z, selector_cercanos,pesos
 
-def init16d(pob,xli,xui):
+def init16d(pob,xli,xui,peso):
 
     "El número de subproblemas es igual al tamaño de población"
     subproblemas = pob
@@ -417,7 +437,7 @@ def init16d(pob,xli,xui):
     poblacion = generate_population(pob,xli,xui)
 
     "5 PASO: EVALUACIÓN DE LA POBLACIÓN"
-    f1,f2,fitness = evaluate_population16d(poblacion)
+    f1,f2,fitness = evaluate_population16d(poblacion,peso)
     "Seleccionamos los mejores valores objetivos fi encontrados"
     f1best = find_best(f1)
     f2best = find_best(f2)
@@ -433,7 +453,7 @@ def init16d(pob,xli,xui):
 
 
 
-def iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z):
+def iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso):
     ''' MÉTODO ITERATIVO DEL ALGORITMO BASADO EN AGREGACIÓN'''
 
     '''PASO 1: SELECCIÓN ALEATORIA DE LOS ÍNDICES VECINOS DE CADA SUBPROBLEMA GENERAR UNA SOLUCIÓN CON OPERADORES
@@ -441,11 +461,11 @@ def iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z):
     "Nueva población de individuos"
     cr = 0.5
         
-    poblacion,z,f1,f2 = operator4d(selector_cercanos,poblacion,f,xui,xli,cr,z,pesos)
+    poblacion,z,f1,f2 = operator4d(selector_cercanos,poblacion,f,xui,xli,cr,z,pesos,peso)
             
     return poblacion,z,f1,f2
 
-def iterative16d(poblacion,xli,xui,selector_cercanos,pesos,f,z):
+def iterative16d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso):
     ''' MÉTODO ITERATIVO DEL ALGORITMO BASADO EN AGREGACIÓN'''
 
     '''PASO 1: SELECCIÓN ALEATORIA DE LOS ÍNDICES VECINOS DE CADA SUBPROBLEMA GENERAR UNA SOLUCIÓN CON OPERADORES
@@ -453,6 +473,6 @@ def iterative16d(poblacion,xli,xui,selector_cercanos,pesos,f,z):
     "Nueva población de individuos"
     cr = 0.5
         
-    poblacion,z,f1,f2 = operator16d(selector_cercanos,poblacion,f,xui,xli,cr,z,pesos)
+    poblacion,z,f1,f2 = operator16d(selector_cercanos,poblacion,f,xui,xli,cr,z,pesos,peso)
     
     return poblacion,z,f1,f2
