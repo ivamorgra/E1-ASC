@@ -79,7 +79,7 @@ def out_cf616d(individuos,generaciones,f,peso):
     plt.show()
 
 
-out_cf64d(20,200,0.5,100)
+out_cf64d(50,200,0.5,500)
 #out_cf616d(20,200,0.5)
 
 
