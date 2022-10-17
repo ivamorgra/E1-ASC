@@ -1,4 +1,3 @@
-
 from cProfile import label
 from turtle import color
 from alg import init,iterative, pareto_front
@@ -13,7 +12,7 @@ def create_file(individuos,generaciones,f,seed):
     return output_file
 
 
-def show_graph(individuos,generaciones,sol1,sol2,z,unique):
+def show_graph(individuos,generaciones,sol1,sol2,z,unique,seed):
     f1,f2 = pareto_front()
     plt.scatter(z[0],z[1], color='yellow',label='Best')
     plt.scatter(f1,f2,color='red',label='Pareto Front')
@@ -26,8 +25,10 @@ def show_graph(individuos,generaciones,sol1,sol2,z,unique):
     if unique == True:
         plt.title('ZDT3 con '+str(individuos)+' individuos y '+str(generaciones)+' generaciones con seed aleatoria')
     else:
-        plt.title('ZDT3 con '+str(individuos)+' individuos y '+str(generaciones)+' generaciones con seed 9')
+        plt.title('ZDT3 con '+str(individuos)+' individuos y '+str(generaciones)+' generaciones con seed '+str(seed))
+    plt.savefig('./ejecutions/zdt3/zdt3'+str(individuos)+'individuos'+str(generaciones)+'generacionesseed'+str(seed)+'.png')
     plt.show()
+    
 
 ''' CONSTRUCCIÓN DEL ALGORITMO PRINCIPAL'''
 def main_zdt3_ficheros(individuos, generaciones,f):
@@ -44,10 +45,11 @@ def main_zdt3_ficheros(individuos, generaciones,f):
         for j in range(0,generaciones):
             
             poblacion,z,sol1,sol2 = iterative(poblacion,xli,xui,selector_cercanos,pesos,f,z)
-
+            
             for s1,s2 in zip(sol1,sol2):
-                output_file.write(str(s1)+"   "+str(s2)+"   "+"0.0"+"\n")
+                output_file.write(str(s1)+"\t"+str(s2)+"\t"+"0.0"+"\n")
         
+        show_graph(individuos,generaciones,sol1,sol2,z,False,seed)
         output_file.close()
     
     return poblacion,z,sol1,sol2
@@ -84,7 +86,7 @@ def out(individuos,generaciones,f,unique):
         poblacion,z,sol1,sol2 = main(individuos,generaciones,f)
         
     
-    show_graph(individuos,generaciones,sol1,sol2,z,unique)
+        show_graph(individuos,generaciones,sol1,sol2,z,unique,0)
         
     
-out(50,200,0.5,True)
+out(50,200,0.5,False)
