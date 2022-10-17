@@ -6,6 +6,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
+def show_initial_graph(f1best,f2best,f1pa,f2pa,f1,f2):
+    plt.scatter(f1best,f2best, color='yellow',label='Best')
+    plt.scatter(f1pa,f2pa,color='red',label='Pareto Front')
+    plt.scatter(f1,f2, color='blue',label='Solution')
+    plt.title(' ZDT3 (Población inicial) ')
+    plt.xlabel('f1')
+    plt.ylabel('f2')
+    plt.legend()
+    plt.show()
+
 def normal_distribution(ratio,pob):
     pesos =[]
     res = []
@@ -226,7 +236,10 @@ def pareto_front():
     
     return f1,f2
 
-def init(pob,xli,xui):
+def init(pob,xli,xui,unique,seed):
+
+    if unique==False:
+        random.seed(seed)
 
     "El número de subproblemas es igual al tamaño de población"
     subproblemas = pob
@@ -258,11 +271,10 @@ def init(pob,xli,xui):
     z = [f1best,f2best] 
 
     "Representación gráfica"
-    f1pa,f2pa = pareto_front()
-    plt.scatter(f1best,f2best, color='yellow',label='Best')
-    plt.scatter(f1pa,f2pa,color='red',label='Pareto Front')
-    plt.scatter(f1,f2, color='blue',label='Solution')
-    plt.show()
+    if unique==True:
+        f1pa,f2pa = pareto_front()
+        show_initial_graph(f1best,f2best,f1pa,f2pa,f1,f2)
+
     return poblacion,z, selector_cercanos,pesos
 
 

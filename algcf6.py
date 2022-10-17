@@ -119,12 +119,12 @@ def cf6(x,n,peso):
     pen = restrictions(x,n,peso)
 
     yj1 = 0
-    for i in range(2,n+1,2):
+    for i in range(1,n+1,2):
         if i%2 == 1:
             yj1 = yj1 + (x[i-1] - 0.8*x[0]*math.cos(6*math.pi*x[0]+i*math.pi/n))**2
     
     yj2 = 0
-    for i in range(2,n+1,2):
+    for i in range(1,n+1,2):
         if i%2 == 0:
             yj2 = yj2 + (x[i-1] - 0.8*x[0]*math.sin(6*math.pi*x[0]+i*math.pi/n))**2
        
