@@ -36,8 +36,7 @@ def normal_distribution(ratio,pob):
 
 def distance(pesos):
     "Uso de la distancia euclídea:"
-    '''Esta función calcula la distancia euclídea para cada par de vectores de pesos consecutivos
-    Devuelve un diccionario (clave=subproblema(vector), valor = distancia)'''
+    
     res = []
     i = 0
     for peso in pesos:
