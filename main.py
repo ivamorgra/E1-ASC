@@ -50,7 +50,7 @@ def main_zdt3_ficheros(individuos, generaciones,f):
             for s1,s2 in zip(sol1,sol2):
                 output_all_file.write(str(s1)+"\t"+str(s2)+"\t"+"0.0"+"\n")
                 if j == generaciones-1:
-                    output_file.write(str(sol1)+"\t"+str(sol2)+"\t"+"0.0"+'\n')
+                    output_file.write(str(s1)+"\t"+str(s2)+"\t"+"0.0"+'\n')
             
         
         show_graph(individuos,generaciones,sol1,sol2,z,False,seed)
