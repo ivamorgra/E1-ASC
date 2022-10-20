@@ -7,9 +7,10 @@ from alg import distance, normal_distribution, t_nearest, get_index
 "Para la creación de ficheros"
 import os 
 
-def create_file(individuos,generaciones,f,seed):
+def create_files(individuos,generaciones,f,seed):
+    output_all_file = open("./outputfiles/zdt3_all_"+"pob"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
     output_file = open("./outputfiles/zdt3"+"pob"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
-    return output_file
+    return output_all_file,output_file
 
 
 def show_graph(individuos,generaciones,sol1,sol2,z,unique,seed):
@@ -40,14 +41,17 @@ def main_zdt3_ficheros(individuos, generaciones,f):
     for seed in range(0,10):
         print("Ejecución con semilla: ",seed)
         poblacion, z, selector_cercanos,pesos = init(individuos,xli,xui,False,seed)
-        output_file = create_file(individuos,generaciones,f,seed)
+        output_all_file,output_file = create_files(individuos,generaciones,f,seed)
         "Iteración"
         for j in range(0,generaciones):
             
             poblacion,z,sol1,sol2 = iterative(poblacion,xli,xui,selector_cercanos,pesos,f,z)
             
             for s1,s2 in zip(sol1,sol2):
-                output_file.write(str(s1)+"\t"+str(s2)+"\t"+"0.0"+"\n")
+                output_all_file.write(str(s1)+"\t"+str(s2)+"\t"+"0.0"+"\n")
+                if j == generaciones-1:
+                    output_file.write(str(sol1)+"\t"+str(sol2)+"\t"+"0.0"+'\n')
+            
         
         show_graph(individuos,generaciones,sol1,sol2,z,False,seed)
         output_file.close()
