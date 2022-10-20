@@ -93,4 +93,4 @@ def out(individuos,generaciones,f,unique):
         show_graph(individuos,generaciones,sol1,sol2,z,unique,0)
         
     
-out(50,200,0.5,False)
+out(100,100,0.5,False)
