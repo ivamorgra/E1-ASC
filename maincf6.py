@@ -5,13 +5,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from algcf6 import *
 
-def create_file4d(individuos,generaciones,f,seed):
-    output_file = open("./outputfiles/cf6_4d_all_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
-    return output_file
+def create_files4d(individuos,generaciones,f,seed):
+    output_all_file = open("./outputfiles/cf6_4d_all_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
+    output_file = open("./outputfiles/cf6_4d_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
+    return output_all_file,output_file
 
-def create_file16d(individuos,generaciones,f,seed):
-    output_file = open("./outputfiles/cf6_16d_all_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
-    return output_file
+def create_files16d(individuos,generaciones,f,seed):
+    output_all_file = open("./outputfiles/cf6_16d_all_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
+    output_file = open("./outputfiles/cf6_16d_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
+    return output_all_file,output_file
 
 
 def show_graph4d(individuos,generaciones,sol1,sol2,z,unique,seed):
@@ -65,15 +67,17 @@ def main_cf64d_ficheros(individuos, generaciones,f,peso):
 
     for seed in range(0,10):
         "Inicialización del algoritmo"
-        poblacion, z, selector_cercanos,pesos = init4d(individuos,xli,xui,peso,False,seed)
-        output_file = create_file4d(individuos,generaciones,f,seed)
+        poblacion, z, selector_cercanos,pesos,pens = init4d(individuos,xli,xui,peso,False,seed)
+        output_all_file,output_file = create_files4d(individuos,generaciones,f,seed)
         "Iteración"
         
         for i in range(0,generaciones):
             
-            poblacion,z,sol1,sol2 = iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
-            for s1,s2 in zip(sol1,sol2):
-                output_file.write(str(s1)+"   "+str(s2)+"   "+"0.0"+"\n")
+            poblacion,z,sol1,sol2,pens = iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
+            for s1,s2,p in zip(sol1,sol2,pens):
+                output_all_file.write(str(s1)+"\t"+str(s2)+"\t"+"-"+str(p)+"\n")
+                if i == generaciones-1:
+                    output_file.write(str(s1)+"\t"+str(s2)+"\t"+"-"+str(p)+'\n')
     
         show_graph4d(individuos,generaciones,sol1,sol2,z,False,seed)
         output_file.close()
@@ -128,16 +132,19 @@ def main_cf616d_ficheros(individuos, generaciones,f,peso):
     "Inicialización del algoritmo"
     for seed in range(0,10):
         print("Ejecución con semilla: ",seed)
-        poblacion, z, selector_cercanos,pesos = init16d(individuos,xli,xui,peso,False,seed)
-        output_file = create_file16d(individuos,generaciones,f,seed)
+        poblacion, z, selector_cercanos,pesos,pens = init16d(individuos,xli,xui,peso,False,seed)
+        output_all_file,output_file = create_files16d(individuos,generaciones,f,seed)
         "Iteración"
     
         for i in range(0,generaciones):
         
-            poblacion,z,sol1,sol2 = iterative16d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
-    
-            for s1,s2 in zip(sol1,sol2):
-                output_file.write(str(s1)+"\t"+str(s2)+"\t"+"0.0"+"\n")
+            poblacion,z,sol1,sol2,pens = iterative16d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
+
+            for s1,s2,p in zip(sol1,sol2,pens):
+                output_all_file.write(str(s1)+"\t"+str(s2)+"\t"+"-"+str(p)+"\n")
+                if i == generaciones-1:
+                    output_file.write(str(s1)+"\t"+str(s2)+"\t"+"-"+str(p)+'\n')
+                
         
         show_graph16d(individuos,generaciones,sol1,sol2,z,False,seed)
         output_file.close()
