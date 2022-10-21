@@ -75,9 +75,12 @@ def main_cf64d_ficheros(individuos, generaciones,f,peso):
             
             poblacion,z,sol1,sol2,pens = iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
             for s1,s2,p in zip(sol1,sol2,pens):
-                output_all_file.write(str(s1)+"\t"+str(s2)+"\t"+"-"+str(p)+"\n")
+                s1cientific = np.format_float_scientific(s1, precision = 6, exp_digits=2)
+                s2cientific = np.format_float_scientific(s2, precision = 6, exp_digits=2)
+                pen = np.format_float_scientific(p, precision = 6, exp_digits=2)
+                output_all_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+"-"+str(pen)+"\n")
                 if i == generaciones-1:
-                    output_file.write(str(s1)+"\t"+str(s2)+"\t"+"-"+str(p)+'\n')
+                    output_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+"-"+str(pen)+'\n')
     
         show_graph4d(individuos,generaciones,sol1,sol2,z,False,seed)
         output_file.close()
@@ -141,9 +144,15 @@ def main_cf616d_ficheros(individuos, generaciones,f,peso):
             poblacion,z,sol1,sol2,pens = iterative16d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
 
             for s1,s2,p in zip(sol1,sol2,pens):
-                output_all_file.write(str(s1)+"\t"+str(s2)+"\t"+"-"+str(p)+"\n")
+                s1cientific = np.format_float_scientific(s1, precision = 6, exp_digits=2)
+                s2cientific = np.format_float_scientific(s2, precision = 6, exp_digits=2)
+                pen = np.format_float_scientific(p, precision = 6, exp_digits=2)
+                sign = ""
+                if p != 0 :
+                    sign = "-"
+                output_all_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+sign+str(pen)+"\n")
                 if i == generaciones-1:
-                    output_file.write(str(s1)+"\t"+str(s2)+"\t"+"-"+str(p)+'\n')
+                    output_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+sign+str(pen)+'\n')
                 
         
         show_graph16d(individuos,generaciones,sol1,sol2,z,False,seed)

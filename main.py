@@ -48,9 +48,12 @@ def main_zdt3_ficheros(individuos, generaciones,f):
             poblacion,z,sol1,sol2 = iterative(poblacion,xli,xui,selector_cercanos,pesos,f,z)
             
             for s1,s2 in zip(sol1,sol2):
-                output_all_file.write(str(s1)+"\t"+str(s2)+"\t"+"0.0"+"\n")
+                s1cientific = np.format_float_scientific(s1, precision = 6, exp_digits=2)
+                s2cientific = np.format_float_scientific(s2, precision = 6, exp_digits=2)
+                zero = np.format_float_scientific(0, precision = 6, exp_digits=2)
+                output_all_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+str(zero)+"\n")
                 if j == generaciones-1:
-                    output_file.write(str(s1)+"\t"+str(s2)+"\t"+"0.0"+'\n')
+                    output_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+str(zero)+'\n')
             
         
         show_graph(individuos,generaciones,sol1,sol2,z,False,seed)
