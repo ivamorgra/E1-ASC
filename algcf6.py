@@ -314,7 +314,7 @@ def operator4d(lista,poblacion,f,xui,xli,cr,z,pesos,peso):
         '''PASO 4: ACTUALIZACIÓN DE LOS VECINOS'''
         poblacion = update_neihbours4d(j,poblacion,ind,lista,pesos,z,peso)
     
-    return poblacion,z,functions_one,functions_two,pen
+    return poblacion,z,functions_one,functions_two,pens
 
 
 def operator16d(lista,poblacion,f,xui,xli,cr,z,pesos,peso):

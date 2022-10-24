@@ -6,13 +6,13 @@ import numpy as np
 from algcf6 import *
 
 def create_files4d(individuos,generaciones,f,seed):
-    output_all_file = open("./outputfiles/cf6_4d_all_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
-    output_file = open("./outputfiles/cf6_4d_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
+    output_all_file = open("./outputfiles/cf64dallpop"+str(individuos)+"g"+str(generaciones)+"seed0"+str(seed+1)+".out", "w")
+    output_file = open("./outputfiles/cf6_4d_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed+1)+".out", "w")
     return output_all_file,output_file
 
 def create_files16d(individuos,generaciones,f,seed):
-    output_all_file = open("./outputfiles/cf6_16d_all_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
-    output_file = open("./outputfiles/cf6_16d_popmp"+str(individuos)+"g"+str(generaciones)+"seed"+str(seed)+".out", "w")
+    output_all_file = open("./outputfiles/cf616dallpop"+str(individuos)+"g"+str(generaciones)+"seed0"+str(seed+1)+".out", "w")
+    output_file = open("./outputfiles/cf6_16d_popmp"+str(individuos)+"g"+str(generaciones)+"seed0"+str(seed+1)+".out", "w")
     return output_all_file,output_file
 
 
@@ -74,13 +74,17 @@ def main_cf64d_ficheros(individuos, generaciones,f,peso):
         for i in range(0,generaciones):
             
             poblacion,z,sol1,sol2,pens = iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
+
             for s1,s2,p in zip(sol1,sol2,pens):
                 s1cientific = np.format_float_scientific(s1, precision = 6, exp_digits=2)
                 s2cientific = np.format_float_scientific(s2, precision = 6, exp_digits=2)
                 pen = np.format_float_scientific(p, precision = 6, exp_digits=2)
-                output_all_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+"-"+str(pen)+"\n")
+                sign = ""
+                if p != 0 :
+                    sign = "-"
+                output_all_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+sign+str(pen)+"\n")
                 if i == generaciones-1:
-                    output_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+"-"+str(pen)+'\n')
+                    output_file.write(str(s1cientific)+"\t"+str(s2cientific)+"\t"+sign+str(pen)+'\n')
     
         show_graph4d(individuos,generaciones,sol1,sol2,z,False,seed)
         output_file.close()
@@ -195,8 +199,8 @@ def out_cf616d(individuos,generaciones,f,peso,unique):
    
 
 
-#out_cf64d(50,200,0.5,2000,True)
-out_cf616d(20,200,0.5,2000,False)
+#out_cf64d(40,250,0.5,2000,False)
+out_cf616d(200,50,0.5,2000,False)
 
 
 
