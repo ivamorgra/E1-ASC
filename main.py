@@ -17,7 +17,22 @@ def show_graph(individuos,generaciones,sol1,sol2,z,unique,seed):
     f1,f2 = pareto_front()
     plt.scatter(z[0],z[1], color='yellow',label='Best')
     plt.scatter(f1,f2,color='red',label='Pareto Front')
-    plt.scatter(sol1,sol2, color='green',label='Solution')
+    if unique == True:
+        f = open("./inputfiles/zdt3_final_popp200g50_seed01.out", "r")
+        lines = f.readlines()
+        print(lines[0])
+        solnsga = []
+        sol2nsga = []
+        for l in lines[2:]:
+            
+            el = l.split("\t")
+            solnsga.append(float(el[0]))
+            sol2nsga.append(float(el[1]))
+
+        f.close()
+        plt.scatter(solnsga,sol2nsga, color='purple',label = "Solution from NSGA-II")
+    
+    plt.scatter(sol1,sol2, color='green',label='Solution from agregation')
     plt.xscale('linear')
     plt.yscale('linear')
     plt.xlabel('f1')
@@ -25,6 +40,7 @@ def show_graph(individuos,generaciones,sol1,sol2,z,unique,seed):
     plt.legend()
     if unique == True:
         plt.title('ZDT3 con '+str(individuos)+' individuos y '+str(generaciones)+' generaciones con seed aleatoria')
+        plt.savefig('./ejecutions/zdt3/zdt3'+str(individuos)+'individuos'+str(generaciones)+'.png')
     else:
         plt.title('ZDT3 con '+str(individuos)+' individuos y '+str(generaciones)+' generaciones con seed '+str(seed))
     plt.savefig('./ejecutions/zdt3/zdt3'+str(individuos)+'individuos'+str(generaciones)+'generacionesseed'+str(seed)+'.png')
@@ -96,4 +112,4 @@ def out(individuos,generaciones,f,unique):
         show_graph(individuos,generaciones,sol1,sol2,z,unique,0)
         
     
-out(100,40,0.5,False)
+out(200,50,0.5,True)
