@@ -18,7 +18,7 @@ def show_graph(individuos,generaciones,sol1,sol2,z,unique,seed):
     plt.scatter(z[0],z[1], color='yellow',label='Best')
     plt.scatter(f1,f2,color='red',label='Pareto Front')
     if unique == True:
-        f = open("./inputfiles/zdt3_final_popp200g50_seed01.out", "r")
+        f = open("./inputfiles/zdt3_final_popp80g50_seed04.out", "r")
         lines = f.readlines()
         print(lines[0])
         solnsga = []
@@ -112,4 +112,4 @@ def out(individuos,generaciones,f,unique):
         show_graph(individuos,generaciones,sol1,sol2,z,unique,0)
         
     
-out(200,50,0.5,True)
+out(80,50,0.5,True)

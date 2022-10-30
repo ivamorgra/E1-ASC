@@ -17,9 +17,26 @@ def create_files16d(individuos,generaciones,f,seed):
 
 
 def show_graph4d(individuos,generaciones,sol1,sol2,z,unique,seed):
+    
     f1,f2 = pareto_front()
     plt.scatter(z[0],z[1], color='yellow',label='Best')
     plt.scatter(f1,f2,color='red',label='Pareto Front')
+    
+    if unique == True:
+        f = open("./inputfiles/cf6_4d_final_popp100g40_seed03.out", "r")
+        lines = f.readlines()
+        print(lines[0])
+        solnsga = []
+        sol2nsga = []
+        for l in lines[2:]:
+            
+            el = l.split("\t")
+            solnsga.append(float(el[0]))
+            sol2nsga.append(float(el[1]))
+
+        f.close()
+        plt.scatter(solnsga,sol2nsga, color='purple',label = "Solution from NSGA-II")
+ 
     plt.scatter(sol1,sol2, color='green',label='Solution')
     plt.xscale('linear')
     plt.yscale('linear')
@@ -38,6 +55,25 @@ def show_graph16d(individuos,generaciones,sol1,sol2,z,unique,seed):
     f1,f2 = pareto_front()
     plt.scatter(z[0],z[1], color='yellow',label='Best')
     plt.scatter(f1,f2,color='red',label='Pareto Front')
+    if unique == True:
+        f = open("./inputfiles/cf6_16d_final_popp40g100_seed01.out", "r")
+        lines = f.readlines()
+        print(lines[0])
+        solnsga = []
+        sol2nsga = []
+        for l in lines[2:]:
+            
+            el = l.split("\t")
+            solnsga.append(float(el[0]))
+            sol2nsga.append(float(el[1]))
+
+        f.close()
+        plt.scatter(solnsga,sol2nsga, color='purple',label = "Solution from NSGA-II")
+    
+    
+    
+    
+    
     plt.scatter(sol1,sol2, color='green',label='Solution')
     plt.xscale('linear')
     plt.yscale('linear')
@@ -105,13 +141,13 @@ def main_cf64d(individuos, generaciones,f,peso):
 
     
     "Inicialización del algoritmo"
-    poblacion, z, selector_cercanos,pesos = init4d(individuos,xli,xui,peso,True,0)
+    poblacion, z, selector_cercanos,pesos,pens = init4d(individuos,xli,xui,peso,True,0)
     
     "Iteración"
         
     for i in range(0,generaciones):
             
-        poblacion,z,sol1,sol2 = iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
+        poblacion,z,sol1,sol2,pens = iterative4d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
         
     
     return poblacion,z,sol1,sol2
@@ -177,13 +213,13 @@ def main_cf616d(individuos, generaciones,f,peso):
     xli.sort(reverse=True)
 
     "Inicialización del algoritmo"
-    poblacion, z, selector_cercanos,pesos = init16d(individuos,xli,xui,peso,True,0)
+    poblacion,z, selector_cercanos,pesos,pens = init16d(individuos,xli,xui,peso,True,0)
 
     "Iteración"
     
     for i in range(0,generaciones):
         
-        poblacion,z,sol1,sol2 = iterative16d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
+        poblacion,z,sol1,sol2,pens = iterative16d(poblacion,xli,xui,selector_cercanos,pesos,f,z,peso)
     
     
     return poblacion,z,sol1,sol2
@@ -199,8 +235,8 @@ def out_cf616d(individuos,generaciones,f,peso,unique):
    
 
 
-#out_cf64d(40,250,0.5,2000,False)
-out_cf616d(200,50,0.5,2000,False)
+#out_cf64d(100,40,0.5,100,True)
+out_cf616d(100,40,0.5,100,True)
 
 
 
